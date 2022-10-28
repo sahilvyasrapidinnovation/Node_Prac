@@ -20,6 +20,7 @@ hbs.registerPartials(partialsPath)
 
 //setup static directory to serve 
 app.use(express.static(path.join(__dirname, '../public')))
+app.use(express.urlencoded({extended:false}))
 
 app.get('', (req,res)=> {
     res.render('index',{
@@ -50,16 +51,15 @@ app.get('/weather',(req,res)=>{
     // {
     //     res.send({error:'Please provide address'})
     // }
-    console.log(req.query.lat)
+    //console.log(req.query.lat)
 
-    forecast(req.query.lat,req.query.long, (error,forecastdata)=>{
+    forecast(req.query.cityName, (error,forecastdata)=>{
         if(error) {
             return res.send(error)
         }
         res.send({
             forecast: forecastdata
         })
-
 
     })
 
@@ -78,13 +78,20 @@ app.get('/products',(req,res)=>{
     if(!req.query.search){
        return  res.send('error: You must provide a search term')
     }
-    console.log(req.query)
+    console.log(req.params[0])
     res.send({
         products: []
     })
 })
 
+app.get('/path/:id',(req,res)=>{
+    console.log(req.params.id)
+    res.send({id : req.params.id})
+})
+
+
 app.get('/help/*',(req,res)=>{
+    
           res.render('error',{
             mytitle:'404',
             errorTitle:'Article not found'
@@ -97,6 +104,16 @@ app.get('*',(req,res)=>{
         errorTitle:'My error 404'
       })
 })
+
+
+app.post('/postData',(req,res)=> {
+    console.log(req.body)
+    //res.render('index1',{
+      //           })
+      res.send("Done!")
+
+})
+
 
 
 
